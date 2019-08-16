@@ -22,6 +22,8 @@ class TenantIdInterceptor {
       request.setAttribute('gorm.tenantId',tenantId)
       log.debug("Set gorm.tenantId attribute to ${tenantId}");
     }
+
+    true
   }
 
   boolean after() { 

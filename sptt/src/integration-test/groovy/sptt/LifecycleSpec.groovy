@@ -8,6 +8,7 @@ import geb.spock.GebSpec
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import groovyx.net.http.HttpBuilder
+import groovyx.net.http.FromServer
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 
@@ -45,10 +46,12 @@ class LifecycleSpec extends Specification {
 
       def result = httpBin.get {
         request.uri.path = "/admin/createTenant?tenantId=${tenantid}"
-        response.when(200) {
+        response.when(200) { FromServer fs, Object body ->
+          logger.debug("createTenant returns 200 ${body}");
           status='OK'
         }
       }
+      logger.debug("Result: ${result}");
 
     then:"The response is correct"
       status=='OK'
@@ -74,10 +77,12 @@ class LifecycleSpec extends Specification {
 
       def result = httpBin.get {
         request.uri.path = "/admin/createWidget?name=${widgetName}"
-        response.when(200) {
+        response.when(200) { FromServer fs, Object body ->
+          logger.debug("createWidget returns 200 ${body}");
           status='OK'
         }
       }
+      logger.debug("Result: ${result}");
 
     then:"The response is correct"
       status=='OK'
