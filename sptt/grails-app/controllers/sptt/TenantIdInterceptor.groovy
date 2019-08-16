@@ -19,10 +19,13 @@ class TenantIdInterceptor {
     if ( tenantId ) {
       request.setAttribute('gorm.tenantId',tenantId)
     }
+  }
 
-    boolean after() { true }
+  boolean after() { 
+    true 
+  }
 
-    void afterView() {
-        // no-op
-    }
+  void afterView() {
+    // no-op
+  }
 }
