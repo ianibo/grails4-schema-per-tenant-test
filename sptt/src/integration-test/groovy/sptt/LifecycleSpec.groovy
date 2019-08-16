@@ -45,7 +45,8 @@ class LifecycleSpec extends Specification {
       }
 
       def result = httpBin.get {
-        request.uri.path = "/admin/createTenant?tenantId=${tenantid}"
+        request.uri.path = '/admin/createTenant'
+        request.uri.query = [tenantId:tenantid]
         response.when(200) { FromServer fs, Object body ->
           logger.debug("createTenant returns 200 ${body}");
           status='OK'
@@ -76,7 +77,8 @@ class LifecycleSpec extends Specification {
       }
 
       def result = httpBin.get {
-        request.uri.path = "/admin/createWidget?name=${widgetName}"
+        request.uri.path = '/admin/createWidget'
+        request.uri.query = [name:widgetName]
         response.when(200) { FromServer fs, Object body ->
           logger.debug("createWidget returns 200 ${body}");
           status='OK'
