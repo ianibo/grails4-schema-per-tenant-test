@@ -2,6 +2,9 @@ package sptt
 
 import javax.servlet.http.HttpServletRequest
 
+import org.springframework.web.context.request.RequestContextHolder
+import org.springframework.web.context.request.RequestAttributes
+
 class TenantIdInterceptor {
 
   int order = HIGHEST_PRECEDENCE + 100
@@ -19,8 +22,11 @@ class TenantIdInterceptor {
     // HttpServletRequest httpServletRequest = getRequest()
     String tenantId = request.getHeader('X-TENANT')?.toLowerCase()?.trim()
     if ( tenantId ) {
-      request.setAttribute('gorm.tenantId',tenantId)
       log.debug("Set gorm.tenantId attribute to ${tenantId}");
+      request.setAttribute('gorm.tenantId',tenantId)
+
+       RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes()
+       log.debug("check:: ${requestAttributes.getAttribute('gorm.tenantId', RequestAttributes.SCOPE_SESSION)}");
     }
 
     true
