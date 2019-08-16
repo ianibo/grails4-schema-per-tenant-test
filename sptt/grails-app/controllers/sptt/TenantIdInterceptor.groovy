@@ -26,6 +26,7 @@ class TenantIdInterceptor {
       request.setAttribute('gorm.tenantId',tenantId)
 
        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes()
+       requestAttributes.setAttribute('gorm.tenantId',tenantId,RequestAttributes.SCOPE_SESSION);
        log.debug("check:: ${requestAttributes.getAttribute('gorm.tenantId', RequestAttributes.SCOPE_SESSION)}");
     }
 
