@@ -59,5 +59,37 @@ class LifecycleSpec extends Specification {
 
 
   }
+
+  void "test widget creation"(tenantid, widgetName) {
+    when:"We post a new tenant request to the admin controller"
+
+      logger.debug("Post new widget (${widgetName}) for tenant ${tenantid}");
+
+      String status = null;
+
+      def httpBin = HttpBuilder.configure {
+        request.uri = 'http://localhost:'+serverPort
+         request.headers['X-TENANT'] = tenantid
+      }
+
+      def result = httpBin.get {
+        request.uri.path = "/admin/createWidget?name=${widgetName}"
+        response.when(200) {
+          status='OK'
+        }
+      }
+
+    then:"The response is correct"
+      status=='OK'
+
+    where:
+      tenantid | widgetName
+      'TestTenantG' | 'Test Widget A Tenant G'
+      'TestTenantG' | 'Test Widget B Tenant G'
+      'TestTenantG' | 'Test Widget C Tenant G'
+      'TestTenantG' | 'Test Widget D Tenant G'
+      'TestTenantG' | 'Test Widget E Tenant G'
+      'TestTenantF' | 'Test Widget A Tenant F'
+  }
  
 }

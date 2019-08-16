@@ -10,4 +10,8 @@ class AdminController {
     def result=[:]
     render result as JSON
   }
+
+  def createWidget(String widgetName) {
+    log.debug("createWidget(${widgetName}) ${request.getAttribute('gorm.tenantId')}");
+  }
 }
