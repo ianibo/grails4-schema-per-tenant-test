@@ -8,6 +8,14 @@ grails:
             # Whether to translate GORM events into Reactor events
             # Disabled by default for performance reasons
             events: false
+    multiTenancy:
+        mode: SCHEMA
+        # Sesssion Tenant Resolver looks for a session attribute called gorm.tenantId
+        # It is probably easiest to use an interceptor to set this from whatever local mechanism
+        # you use - for example - a HTTP Header
+        tenantResolverClass: org.grails.datastore.mapping.multitenancy.web.SessionTenantResolver
+
+ 
 info:
     app:
         name: '@info.app.name@'

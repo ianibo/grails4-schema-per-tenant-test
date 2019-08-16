@@ -1,6 +1,8 @@
 package sptt
 
-class Widget {
+import grails.gorm.MultiTenant
+
+class Widget implements MultiTenant<Widget> {
 
   String widgetName
 
