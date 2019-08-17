@@ -1,4 +1,4 @@
-# grails4-schema-per-tenant-test
+# grails4-schema-per-tenant-test (H2, dynamic tenant creation and setup)
 Grails 4 schema per tenant test
 
 This project is a trivial example of a grails 4 schema per tenant setup - in paricular tho
