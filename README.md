@@ -10,7 +10,7 @@ This project is a trivial example of a grails 4 schema per tenant setup - in par
 It's primary purpose is to serve as a testbed for the graphql issue documented in the mt_graphql branch, but kept
 separate in case it's useful for anyone wanting to try dynamic multi-tenant setup in G4.
 
-The project runs an [integration test](https://github.com/ianibo/grails4-schema-per-tenant-test/blob/master/sptt/src/integration-test/groovy/sptt/LifecycleSpec.groovy) that dynamically creates two tenants and creates "Widget" entries for each and checks that they are kept separate.
+The project runs an [integration test](https://github.com/ianibo/grails4-schema-per-tenant-test/blob/master/sptt/src/integration-test/groovy/sptt/LifecycleSpec.groovy) that dynamically creates two tenants and creates [Widget](https://github.com/ianibo/grails4-schema-per-tenant-test/blob/master/sptt/grails-app/domain/sptt/Widget.groovy) entries for each and checks that they are kept separate.
 
 I had an issue with needing to force withTransaction in my controller - of course IRL you would probably move
 this functionality to a service anyway - but it's worth highlighting as something that used to work, and seems 
