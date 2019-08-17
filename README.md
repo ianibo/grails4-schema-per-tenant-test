@@ -7,8 +7,7 @@ This project is a trivial example of a grails 4 schema per tenant setup - in par
 * It uses an interceptor to map a HTTP header X-TENANT to the session attribute needed by SessionTenantResolver
 * It uses a particular setup of a SchemaHandler for H2 (As H2 needs uppercase schema names)
 
-It's primary purpose is to serve as a testbed for the graphql issue documented in the mt_graphql branch, but kept
-separate in case it's useful for anyone wanting to try dynamic multi-tenant setup in G4.
+It's primary purpose is to serve as a testbed for the [graphql issue](https://github.com/grails/gorm-graphql/issues/24) demonstrated in the [mt_graphql branch](https://github.com/ianibo/grails4-schema-per-tenant-test/tree/mt_graphql), but kept separate in case it's useful for anyone wanting to try dynamic multi-tenant setup in G4, or to test other MT issues.
 
 The project runs an [integration test](https://github.com/ianibo/grails4-schema-per-tenant-test/blob/master/sptt/src/integration-test/groovy/sptt/LifecycleSpec.groovy) that dynamically creates two tenants and creates [Widget](https://github.com/ianibo/grails4-schema-per-tenant-test/blob/master/sptt/grails-app/domain/sptt/Widget.groovy) entries for each and checks that they are kept separate.
 
