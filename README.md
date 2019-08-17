@@ -3,7 +3,7 @@ Grails 4 schema per tenant test
 
 This project is a trivial example of a grails 4 schema per tenant setup - in paricular tho
 
-* It uses dynamic rather than static configuration of the tenants
+* It uses dynamic rather than static configuration of the tenants (IE the integration test issues calls that cause the creation of the tenants at runtime rather than the data being hard-coded into application.yml, the tables for each tenant are configured when the schema is created at runtime).
 * It uses an interceptor to map a HTTP header X-TENANT to the session attribute needed by SessionTenantResolver
 * It uses a particular setup of a SchemaHandler for H2 (As H2 needs uppercase schema names)
 
