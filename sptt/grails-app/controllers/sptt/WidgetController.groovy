@@ -5,10 +5,10 @@ import grails.converters.*
 import grails.gorm.multitenancy.CurrentTenant
 import grails.gorm.transactions.Transactional
 
+@CurrentTenant
+@Transactional
 class WidgetController {
 
-  @CurrentTenant
-  @Transactional
   def createWidget(String name) {
     def result=[status:'SURE']
 
