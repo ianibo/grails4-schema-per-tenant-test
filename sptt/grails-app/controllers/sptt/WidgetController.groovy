@@ -12,6 +12,7 @@ class WidgetController {
   def createWidget(String name) {
     def result=[status:'SURE']
 
+    
     log.debug("createWidget(${params})");
     Widget w = new Widget(widgetName:name).save(flush:true, failOnError:true);
     log.debug(Widget.list());

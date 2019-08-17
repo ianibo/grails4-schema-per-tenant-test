@@ -8,6 +8,7 @@ import org.grails.orm.hibernate.HibernateDatastore
 import org.grails.datastore.mapping.core.exceptions.ConfigurationException
 import groovy.sql.Sql
 import javax.sql.DataSource
+import org.grails.datastore.mapping.multitenancy.web.SessionTenantResolver
 
 class TenantIdInterceptor {
 
@@ -32,11 +33,16 @@ class TenantIdInterceptor {
     String tenantId = request.getHeader('X-TENANT')?.toLowerCase()?.trim()
     if ( tenantId ) {
       log.debug("Set gorm.tenantId attribute to ${tenantId}");
-      RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes()
-      requestAttributes.setAttribute('gorm.tenantId',tenantId,RequestAttributes.SCOPE_SESSION);
+      // RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes()
+      // requestAttributes.setAttribute('gorm.tenantId',tenantId,RequestAttributes.SCOPE_SESSION);
+      // The page at https://guides.grails.org/database-per-tenant/guide/index.html suggests
+      session.setAttribute(SessionTenantResolver.ATTRIBUTE, tenantId);
 
       // See if we have a datasource that corresponds to this tenantid
       validateTenant(tenantId);
+    }
+    else {
+      log.warn("No X-TENANT header");
     }
 
     true
@@ -50,10 +56,12 @@ class TenantIdInterceptor {
     }
     catch ( ConfigurationException ce ) {
       // Create schema
+      log.debug("Looks like ${tenant} does not exist yet as a schema - create it (${ce.message})");
       Sql sql = new Sql(dataSource as DataSource)
       sql.withTransaction {
           log.debug("Execute -- create schema ${tenant}");
           sql.execute("create schema if not exists ${tenant}" as String)
+          log.debug("All done");
       }
       log.debug("Schema created ${tenant}");
       sql.close();

@@ -12,6 +12,7 @@ import org.grails.datastore.gorm.jdbc.schema.SchemaHandler
  * Resolves the schema names
  *
  * @See https://github.com/grails/gorm-hibernate5/blob/master/grails-datastore-gorm-hibernate5/src/main/groovy/org/grails/orm/hibernate/HibernateDatastore.java
+ * @See https://github.com/grails/gorm-hibernate5/blob/master/docs/src/docs/asciidoc/multiTenancy/schemaPerTenant.adoc
  */
 @CompileStatic
 @Slf4j
@@ -25,9 +26,9 @@ class SpttSchemaHandler implements SchemaHandler {
         // We use the search_path variant as folio installs some extensions in the public schema and 
         // we need to be able to access them.
         // useSchemaStatement = "SET SCHEMA '%s'"
-        useSchemaStatement = "SET search_path TO %s,public"
-        createSchemaStatement = "CREATE SCHEMA %s"
-        defaultSchemaName = "public"
+        useSchemaStatement = "SET SCHEMA %s"
+        createSchemaStatement = "CREATE SCHEMA %s IF NOT EXISTS"
+        defaultSchemaName = "PUBLIC"
     }
 
     SpttSchemaHandler(String useSchemaStatement, String createSchemaStatement, String defaultSchemaName) {
@@ -39,46 +40,30 @@ class SpttSchemaHandler implements SchemaHandler {
     @Override
     void useSchema(Connection connection, String name) {
         // log.debug("useSchema");
-        String useStatement = String.format(useSchemaStatement, name)
+        String useStatement = String.format(useSchemaStatement, name.toUpperCase())
         // log.debug("Executing SQL Set Schema Statement: ${useStatement}")
 
         try {
-          // Gather all the schemas
-          ResultSet schemas = connection.getMetaData().getSchemas()
-          Collection<String> schemaNames = []
-          while(schemas.next()) {
-            schemaNames.add(schemas.getString("TABLE_SCHEM"))
-          }
-
-          if ( schemaNames.contains(name) ) {
-            // The assumption seems to be that this will throw an exception if the schema does not exist, but pg silently continues...
-            connection
-                  .createStatement()
-                  .execute(useStatement)
-          }
-          else {
-            throw new RuntimeException("Attempt to use schema ${name} that does not exist according to JDBC metadata");
-          }
+          connection
+            .createStatement()
+            .execute(useStatement)
         }
         catch ( Exception e ) {
           log.error("problem trying to use schema - \"${useStatement}\"",e)
           // Rethrow
           throw e
         }
-
-        // log.debug("useSchema completed OK");
     }
 
     @Override
     void useDefaultSchema(Connection connection) {
-        // log.debug("useDefaultSchema");
-        useSchema(connection, defaultSchemaName)
+      useSchema(connection, defaultSchemaName)
     }
 
     @Override
     void createSchema(Connection connection, String name) {
         String schemaCreateStatement = String.format(createSchemaStatement, name)
-        // log.debug("Executing SQL Create Schema Statement: ${schemaCreateStatement}")
+        log.debug("Executing SQL Create Schema Statement: ${schemaCreateStatement}")
         connection
                 .createStatement()
                 .execute(schemaCreateStatement)
@@ -98,23 +83,23 @@ class SpttSchemaHandler implements SchemaHandler {
           ResultSet schemas = connection.getMetaData().getSchemas()
           while(schemas.next()) {
             String schema_name = schemas.getString("TABLE_SCHEM")
-            if ( schema_name.endsWith(OkapiTenantResolver.getSchemaSuffix()) ) {
-              // log.debug('resolveSchemaNames adding schema for '+schema_name);
-              schemaNames.add(schema_name)
+            if ( [ 'INFORMATION_SCHEMA', 'PUBLIC' ].contains(schema_name) ) {
+              log.debug("Skip ${schema_name}");
             }
             else {
-              // log.debug('resolveSchemaNames skipping '+schema_name);
+              log.debug('resolveSchemaNames adding schema for '+schema_name);
+              schemaNames.add(schema_name)
             }
           }
         } finally {
             try {
-                connection.createStatement().execute('set schema \'public\'')
+                connection.createStatement().execute('set schema PUBLIC')
                 connection?.close()
             } catch (Throwable e) {
                 log.debug("Error closing SQL connection: $e.message", e)
             }
         }
-        log.debug("OkapiSchemaHandler::resolveSchemaNames called - returning ${schemaNames}")
+        log.debug("resolveSchemaNames called - returning ${schemaNames}")
         return schemaNames
     }
 }

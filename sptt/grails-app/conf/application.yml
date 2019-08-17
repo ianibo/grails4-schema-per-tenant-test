@@ -111,7 +111,7 @@ dataSource:
     driverClassName: org.h2.Driver
     username: sa
     password: ''
-    schemaHandler: org.grails.datastore.gorm.jdbc.schema.DefaultSchemaHandler
+    schemaHandler: sptt.SpttSchemaHandler
 
 environments:
     development:
