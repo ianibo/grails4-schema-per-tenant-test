@@ -15,3 +15,11 @@ this functionality to a service anyway - but it's worth highlighting as somethin
 not to in G4.
 
 Comments / suggestions welcome.
+
+# Running
+
+checkout and
+
+    grails test-app
+
+Will run the integration test
