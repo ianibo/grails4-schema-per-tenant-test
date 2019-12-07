@@ -1,5 +1,9 @@
 # grails4-schema-per-tenant-test (H2, dynamic tenant creation and setup)
-Grails 4 schema per tenant test
+
+Grails 4.0.1 schema per tenant test / tested with grails and  JDK managed by sdkman
+
+sdk use java 11.0.5.j9-adpt
+sdk use grails 4.0.1
 
 This project is a trivial example of a grails 4 schema per tenant setup - in paricular tho
 
